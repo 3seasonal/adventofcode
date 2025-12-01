@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from typing import List
 import os
 import sys
 from typing import Iterable, List, Optional
 import re
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 """
 01_elf_safe.py
 Advent of Code 2025 - Day 01 - puzzle 01

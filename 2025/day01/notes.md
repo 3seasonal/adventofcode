@@ -1,6 +1,4 @@
-*notes for day 01*
-
-
+*notes for day 01 - puzzle 01*
 
 Get state
     function to take:
