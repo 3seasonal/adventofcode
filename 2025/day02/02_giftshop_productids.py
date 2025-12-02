@@ -38,8 +38,8 @@ def main():
     """
     
     # config
-    input_path = os.path.join(os.path.dirname(__file__), '02_sample_input.txt')
-    #input_path = os.path.join(os.path.dirname(__file__), '02_input.txt')
+    #input_path = os.path.join(os.path.dirname(__file__), '02_sample_input.txt')
+    input_path = os.path.join(os.path.dirname(__file__), '02_input.txt')
     sample_output = 1227775554
 
     # initialize parser and processor
@@ -47,7 +47,21 @@ def main():
     vpid = ValidatePIDs()
 
     # process instructions
-    print(pp.get_all_ranges())
+    output_invalid_pids = []
+    while pp.has_more_ranges():
+        pid_range = pp.get_next_range()
+        invalid_pids = vpid.get_invalid_pid(pid_range)
+        print(invalid_pids)
+
+        # convert invalid PID strings to ints and add to output list
+        output_invalid_pids.extend(invalid_pids)
+
+    # add up all invalid PIDs
+    total_invalid_pid_sum = sum(output_invalid_pids)
+    print(f"Total sum of invalid product IDs: {total_invalid_pid_sum}")
+
+    
+        
 
 
 
