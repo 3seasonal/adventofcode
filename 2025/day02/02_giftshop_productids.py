@@ -40,8 +40,8 @@ def main():
     # config
     #input_path = os.path.join(os.path.dirname(__file__), '02_sample_input.txt')
     input_path = os.path.join(os.path.dirname(__file__), '02_input.txt')
-    sample_output = 1227775554
-
+    sample_output_01 = 1227775554
+    sample_output_02 = 4174379265
     # initialize parser and processor
     pp = PidParser(input_path)
     vpid = ValidatePIDs()

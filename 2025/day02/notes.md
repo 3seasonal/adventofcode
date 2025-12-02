@@ -25,3 +25,7 @@ reduce set:
 option 2
 regex
 
+
+PUZZLE 2
+an ID is invalid if it is made only of some sequence of digits repeated at least twice
+
