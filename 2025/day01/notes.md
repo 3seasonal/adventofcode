@@ -18,3 +18,7 @@ Class safe_instructions
     get_next_instruction
         - Pops and returns else null
 
+r
+x-c mod m
+
+l
