@@ -39,16 +39,23 @@ def main():
     #input_path = os.path.join(os.path.dirname(__file__), '03_sample_input.txt')
     input_path = os.path.join(os.path.dirname(__file__), '03_input.txt')
     sample_output_01 = 357
-    sample_output_02 = None
+    sample_output_02 = 3121910778619
+
+    voltage_digits = 12
 
     # initialize parser and processor
     bb = BatteryBank(input_path)
     jc = JoltageCalculator()
 
     # process Banks
-    
-    
-        
+
+    while bb.has_banks():
+        bank = bb.get_next_bank()
+        max_voltage, p = jc.get_max_joltage_from_subbank(voltage_digits, bank)
+        jc.accumulate_joltage(int(max_voltage))
+        print(f"Bank: {bank}  Max Joltage: {max_voltage}")
+    print("Total joltage from all banks:", jc.get_total_joltage()) 
+          
 
 
 
