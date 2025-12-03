@@ -50,7 +50,8 @@ def main():
     output_invalid_pids = []
     while pp.has_more_ranges():
         pid_range = pp.get_next_range()
-        invalid_pids = vpid.get_invalid_pid(pid_range)
+        #invalid_pids = vpid.get_invalid_pid(pid_range)
+        invalid_pids = vpid.get_regx_invalid_pid(pid_range)
         print(invalid_pids)
 
         # convert invalid PID strings to ints and add to output list

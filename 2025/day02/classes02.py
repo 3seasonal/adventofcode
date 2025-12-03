@@ -51,6 +51,33 @@ class ValidatePIDs:
             self.net_invalid_pids.extend(invalid_pids)
 
         return invalid_pids
+
+    def get_regx_invalid_pid(self, pid_list: list[int])-> list[int]:
+        """
+        Count invalid product IDs from a list usign regular expressions.
+
+        Args:
+            pid_list (list[int]): The list of invalid product IDs to count.
+        """
+        invalid_pids = []
+        
+        # convert the list of int to a list of str
+        str_pids = [str(pid) for pid in pid_list]
+
+        # regex to match any string  made only of some sequence of one or more numerical digits repeated at least twice
+        pattern = re.compile(r'^(\d+)\1+$')
+        for pid in str_pids:
+            if pattern.match(pid):
+                invalid_pids.append(int(pid))
+        count_invalid = len(invalid_pids)
+        if count_invalid > 0:
+            self.net_invalid_pid_count += count_invalid
+            self.net_invalid_pids.extend(invalid_pids) 
+        return invalid_pids
+
+
+
+
                 
 
 class PidParser:
