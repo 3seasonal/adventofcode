@@ -84,7 +84,7 @@ class ParseAndProcess:
             pandas.DataFrame: The paper grid as a pandas DataFrame.
         """
         if row==None and col==None:
-            return self.df_paper_grid
+            return self.df_paper_grid.copy(deep=True)
         
         if row!=None and col!=None:        
             return self.df_paper_grid.iat[row, col]
@@ -118,7 +118,7 @@ class ParseAndProcess:
             or if row and col are provided, returns the value at that cell.
         """
         if row==None and col==None:
-            return self.df_proximity_grid
+            return self.df_proximity_grid.copy(deep=True)
         
         if row!=None and col!=None:        
             return self.df_proximity_grid.iat[row, col]
@@ -194,3 +194,41 @@ class ParseAndProcess:
             dict: dictionary with counts of cells by number of adjacent paper rolls
         """
         return self.dict_proximity_count
+    
+    def remove_paper_rolls_with_proximity_lt(self, threshold:int=1) -> int:
+        """ removes all paper rolls from the paper grid that have less than the given threshold of adjacent paper rolls
+        This function modifies the paper grid in place, setting cells with less than threshold adjacent rolls to 'x'.
+        Args:
+            threshold (int): minimum number of adjacent rolls to remove
+        Returns:
+            int: number of paper rolls removed
+        """
+        # update the proximity grid first
+        self.calculate_proximity_grid()
+        
+        removed_count = 0
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.df_paper_grid.iat[row, col] == '@':
+                    
+                    # check proximity grid value
+                    if int(self.df_proximity_grid.iat[row, col]) < threshold:
+                        
+                        self.df_paper_grid.iat[row, col] = 'x'
+                        removed_count += 1
+                        
+        return removed_count
+        
+        
+    def calculate_proximity_grid(self) -> None:
+        """ calculates the proximity grid by counting adjacent paper rolls for each cell in the paper grid.
+        This function modifies the proximity grid in place.
+        Args:
+            None
+        Returns:
+            None
+        """
+        for r in range(self.rows):
+            for c in range(self.cols):
+                count = self.get_count_adjacent_paper_rolls(r, c)
+                self.set_df_proximity_grid(r, c, count)

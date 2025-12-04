@@ -50,23 +50,32 @@ def main():
     cols = pp.get_cols()
     
     # iterate over each cell in the paper grid and count adjacent paper rolls
-    for r in range(rows):
-        for c in range(cols):
-            
-            count = pp.get_count_adjacent_paper_rolls(r, c)
-            pp.set_df_proximity_grid(r, c, count)
+    pp.calculate_proximity_grid()
+    
+    # remove paper rolls with less than the threshold of adjacent rolls
+    total_removed = 0
+    removed = -1 #starting value
+    while removed !=0:
+        removed = pp.remove_paper_rolls_with_proximity_lt(threshold=max_adjacent_paper_rolls+1) 
+        total_removed += removed
+        
+        
+        #print (pp.df_paper_grid)
+        #print (r"\nProximity Grid:")
+        
+    print ("Total removed:", total_removed)
 
-    # report results
-    print (f"rows: {rows}, cols: {cols}")
-    print (r"\nPaper Grid:")
-    print (pp.df_paper_grid)
-    print (r"\nProximity Grid:")
-    print (pp.df_proximity_grid)
-    print (r"\nProximity Counts:")
-    dcc = pp.get_dict_proximity_count()
-    for k in dcc.keys():
-        print (dcc[k])
-    print (f"calc sum: {pp.get_count_of_cells_with_min_adjacent_rolls(max_adjacent_paper_rolls)}")
+    # # report results
+    # print (f"rows: {rows}, cols: {cols}")
+    # print (r"\nPaper Grid:")
+    # print (pp.df_paper_grid)
+    # print (r"\nProximity Grid:")
+    # print (pp.df_proximity_grid)
+    # print (r"\nProximity Counts:")
+    # dcc = pp.get_dict_proximity_count()
+    # for k in dcc.keys():
+    #     print (dcc[k])
+    # print (f"calc sum: {pp.get_count_of_cells_with_min_adjacent_rolls(max_adjacent_paper_rolls)}")
     
 
 
