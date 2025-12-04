@@ -53,6 +53,8 @@ class Safe_Position_Tracker:
         
         direction, steps_str = match.groups()
         steps = int(steps_str)
+        zeros_this_move = 0
+        
         
         # turn the dial 
         previous_position = self.current_position
@@ -65,9 +67,6 @@ class Safe_Position_Tracker:
         # update counts
         self.instruction_count += 1
         
-        # check if we are pointing at zero
-        if self.current_position == 0:
-            self.zero_count += 1
         
         # check if we traversed past zero
         # For a right move the number of times we cross the 0 boundary is
@@ -76,16 +75,25 @@ class Safe_Position_Tracker:
         if direction == "R":
             traversed_zeros = (previous_position + steps) // self.modulus
         else:  # direction == "L"
-            traversed_zeros = (steps - previous_position + self.modulus) // self.modulus
+            traversed_zeros = ((self.modulus - previous_position) + steps) // self.modulus
 
-        # If the move ended exactly on zero, do not count that final resting-on-zero
-        # as a "passed zero" traversal. Subtract one traversal in that case.
-        if self.current_position == 0 and traversed_zeros > 0:
+        # edge case handling:
+        if previous_position == 0 and traversed_zeros > 0:
             traversed_zeros -= 1
 
+        # If the move ended exactly on zero, use the traversal count only 
+        if traversed_zeros > 0:
+            zeros_this_move = traversed_zeros
+        else:
+            # check if we are pointing at zero
+            if self.current_position == 0:
+                zeros_this_move = 1
+        self.zero_count += zeros_this_move
+        
         # accumulate traversals
-        self.traverse_zero_count += traversed_zeros
+        #self.traverse_zero_count += traversed_zeros
 
+        print(f"Moved {instruction}: zeros  = {zeros_this_move}    ({previous_position} -> {self.current_position})")
         # return the number of times the dial has pointed to zero (previous behavior)
         return self.instruction_count
         

@@ -39,6 +39,8 @@ def main():
     """
     
     # config
+
+    #input_path = os.path.join(os.path.dirname(__file__), '01_sample_input.txt')
     input_path = os.path.join(os.path.dirname(__file__), '01_input.txt')
     starting_position = 50
     modulus = 100
@@ -47,15 +49,16 @@ def main():
     position_tracker = spt(starting_position=starting_position, modulus=modulus)
     instruction_handler = sih(input_path)
     
-    if instruction_handler.has_instructions():
-        while instruction_handler.has_instructions():
-            instruction = instruction_handler.get_next_instruction()
-            if instruction is not None:
-                position_tracker.move(instruction)
-        print (f"Total zero positions encountered: {position_tracker.get_zero_count()}")
-        print (f"Total instructions processed: {position_tracker.get_instruction_count()}")
-        print (f"Total traversals past zero: {position_tracker.get_traverse_zero_count()}")
-        print (f"Final dial position: {position_tracker.get_current_position()}")
+    while instruction_handler.has_instructions():
+        instruction = instruction_handler.get_next_instruction()
+        if instruction is not None:
+            position_tracker.move(instruction)
+            
+    print ("--")            
+    print (f"Total zero positions encountered: {position_tracker.get_zero_count()}")
+    print (f"Total instructions processed: {position_tracker.get_instruction_count()}")
+    print (f"Total traversals past zero: {position_tracker.get_traverse_zero_count()}")
+    print (f"Final dial position: {position_tracker.get_current_position()}")
 
 if __name__ == "__main__":
     main()
