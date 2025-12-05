@@ -28,6 +28,9 @@ class Safe_Position_Tracker:
         self.traverse_zero_count = 0
         self.instruction_count = 0
         
+        self.slow_net_zero_count = 0  # for debugging slow method comparison
+
+
     
     def move(self, instruction: str) -> int:
         """Moves the dial according to the instruction and updates zero count if needed.
@@ -97,6 +100,51 @@ class Safe_Position_Tracker:
         # return the number of times the dial has pointed to zero (previous behavior)
         return self.instruction_count
         
+
+    def move_slowly(self, instruction: str) -> int:
+        """Moves the dial according to the instruction one step at a time, updating zero count if needed.
+        
+        Instruction format: "<direction><steps>"
+        where <direction> is either "L" or "R", and <steps> is a positive integer.
+        Left decreases position, Right increases position.
+
+                Returns: 
+                        int: the number of instructions processed so far (`instruction_count`).
+        """
+
+        # validarte instruction format
+        match = re.match(r'^(L|R)(\d+)$', instruction)
+        if not match:
+            raise ValueError(f"Invalid instruction format: {instruction}")
+        
+        direction, steps_str = match.groups()
+        steps = int(steps_str)
+        zeros_this_move = 0
+
+        current_position = self.current_position
+        for _ in range(steps):
+            if direction == "L":
+                current_position = (current_position - 1) % self.modulus
+            elif direction == "R":
+                current_position = (current_position + 1) % self.modulus
+            
+            #print (f"  Step {_} to {current_position}")
+
+            # check if we are pointing at zero
+            if current_position == 0:
+                zeros_this_move += 1
+        
+        self.current_position = current_position
+        self.instruction_count += 1
+        self.slow_net_zero_count += zeros_this_move
+        
+
+    def get_slow_zero_count(self) -> int:
+        """Returns the number of times the dial has pointed to zero using the slow method."""
+        return self.slow_net_zero_count
+
+
+
         
     def get_zero_count(self) -> int:
         """Returns the number of times the dial has pointed to zero."""
@@ -143,3 +191,4 @@ class Safe_Instruction_Handler:
     def has_instructions(self) -> bool:
         """Returns True if there are more instructions to process."""
         return len(self.instruction_list) > 0
+

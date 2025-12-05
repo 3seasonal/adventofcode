@@ -52,13 +52,16 @@ def main():
     while instruction_handler.has_instructions():
         instruction = instruction_handler.get_next_instruction()
         if instruction is not None:
-            position_tracker.move(instruction)
+            #position_tracker.move(instruction)
+            position_tracker.move_slowly(instruction)
             
     print ("--")            
     print (f"Total zero positions encountered: {position_tracker.get_zero_count()}")
     print (f"Total instructions processed: {position_tracker.get_instruction_count()}")
     print (f"Total traversals past zero: {position_tracker.get_traverse_zero_count()}")
     print (f"Final dial position: {position_tracker.get_current_position()}")
+    print ("--")            
+    print ("slow method zero count (debug):", position_tracker.get_slow_zero_count())
 
 if __name__ == "__main__":
     main()
