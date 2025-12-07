@@ -10,3 +10,12 @@ Start with max {length}- decrement
 
 
 
+
+The operand always appears in the left most column.
+
+read in rows as string and seperated (left of operrator) by a space. except first
+
+
+function (spit list by indexes)
+
+create 

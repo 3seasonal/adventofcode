@@ -80,61 +80,102 @@ def main():
     length_matrix = length_matrix[:-1]
 
     total_new_cephlapod_result = 0
-
-    # iterate over lengths_matrix as a proxy
-    for col in range(col_count):
+    print ("---")
+    for r in homework_data:    print (r)
+    print ("---")
+    for r in length_matrix:    print (r)
+    print ("---")
+    
+    # # iterate over lengths_matrix as a proxy
+    # for col in range(col_count):
         
-        # find max length in column
-        max_length = max(length_matrix[row][col] for row in range(row_count-1))
-        operands = []
+    #     # find max length in column
+    #     max_length = max(length_matrix[row][col] for row in range(row_count-1))
+    #     operands = []
 
-        current_length = max_length
-        while current_length > 0:
+    #     current_length = max_length
+    #     while current_length > 0:
                         
-            current_number_str = ""
+    #         current_number_str = ""
 
-            # iterate over rows
-            for row in range(row_count-1):
+    #         # iterate over rows
+    #         for row in range(row_count-1):
 
-                # if this cel has a part of the string number in it
-                if length_matrix[row][col] >= current_length:
-                    current_number_str += homework_data[row][col][current_length - 1]
-                    homework_data[row][col] = homework_data[row][col][:-1] # remove last char
+    #             # if this cel has a part of the string number in it
+    #             if length_matrix[row][col] >= current_length:
+    #                 current_number_str += homework_data[row][col][current_length - 1]
+    #                 homework_data[row][col] = homework_data[row][col][:-1] # remove last char
 
-            operands.append(int(current_number_str) if current_number_str else 0)
-            current_length -= 1
+    #         operands.append(int(current_number_str) if current_number_str else 0)
+    #         current_length -= 1
 
         
-        # now process operands with the operation
-        operation = homework_data[row_count-1][col]
+    #     # now process operands with the operation
+    #     operation = homework_data[row_count-1][col]
 
-        print (operation, operands)
+    #     print (operation, operands)
 
 
-        if operation == "+":
-            total_new_cephlapod_result += sum(operands)
-        elif operation == "*":
-            product = 1
-            for op in operands:
-                product *= op
-            total_new_cephlapod_result += product
-        else:
-            print(f"Unknown operation '{operation}' in column {col} for new cephlapod")
-            continue
+    #     if operation == "+":
+    #         total_new_cephlapod_result += sum(operands)
+    #     elif operation == "*":
+    #         product = 1
+    #         for op in operands:
+    #             product *= op
+    #         total_new_cephlapod_result += product
+    #     else:
+    #         print(f"Unknown operation '{operation}' in column {col} for new cephlapod")
+    #         continue
     
-    print(f"Total result with new cephlapod string parsing: {total_new_cephlapod_result}")
+    # print(f"Total result with new cephlapod string parsing: {total_new_cephlapod_result}")
 
-
+    # calculate split points
+    operand_row = homework_data[row_count-1]
+    col_start_points = []
+    
+    # iterate over the operand row: 
+    for i,char in enumerate(operand_row):
+        if char in ["+","*"]:
+            col_start_points.append(i)
             
+    # split each column based on the split points
+    new_homework_data = []
+    for row in homework_data[:-1]:  # exclude last row (operations)
+        new_homework_data.append(convert_line_to_list("".join(row), col_start_points, remove_chars=1))
         
 
-    # process instructions
+    # iterate over columns of new homework data:
+    
+    USE OLD CODE ABOVE
     
     
-    # report results
+####WE ARE HERE
+
+
+def convert_line_to_list(line: str, split_points:List[int], remove_chars:int=1 ) -> list[str]:
+    """
+    Convert a line of text into a list of strings, splitting based on given split points.
+    chars before split points are removed based on the remove_chars parameter.
     
-    # validate against sample output if available
-        
+    Args:
+        line (str): The line of text to convert.
+        split_points (List[int]): List of indices to split the line.
+        remove_chars (int): Number of characters to remove before each split point.
+    """
+    returned_list = []
+    index=0
+    for point in split_points:
+    
+        # handle base case:
+        if note index == 0:
+            
+            returned_list.append(line[index:point-remove_chars])
+            index = point
+    
+    return returned_list
+    
+    
+    
 def parse_input(path: str) :
     """
     Parse the input file into a 2D list of strings.
@@ -147,16 +188,21 @@ def parse_input(path: str) :
         list[list[str]]: 2D list representing the input data.
     """
     print(f"Parsing input from {path}...")
-    data: list[list[str]] = []
-    try:
-        with open(path, "r", encoding="utf-8") as fh:
-            for line in fh:
-                stripped_line = line.strip()
-                if stripped_line:
-                    row = stripped_line.split()
-                    data.append(row)
-    except OSError as e:
-        raise FileNotFoundError(f"Unable to read file {path}: {e}")
+    data: list[str] = []
+    # try:
+    #     with open(path, "r", encoding="utf-8") as fh:
+    #         for line in fh:
+    #             stripped_line = line.strip()
+    #             if stripped_line:
+    #                 row = stripped_line.split()
+    #                 data.append(row)
+    # except OSError as e:
+    #     raise FileNotFoundError(f"Unable to read file {path}: {e}")
+    
+    with open(path, "r", encoding="utf-8") as fh:
+        for line in fh:
+            if line:
+                data.append(row)
     
     return data
 
