@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
-from classes_00 import DoTheThing 
-from classes_00 import InputParser
+from classes_07 import DoTheThing 
+from classes_07 import InputParser
 """
 
 - Project: adventofcode
 - Year: 2025
-- Day: {00}
-- File: {00_puzzle}.py
-- Description: {Do all the things for day 00 puzzle.}
+- Day: 07
+- File: 07_puzzle.py
+- Description: Tacheon Beam Simulation Puzzle
 - Author: 3seasonal
-- Created: 2025-12-{00}
+- Created: 2025-12-07
 - License: MIT (SPDX: MIT)
 
 Notes:
@@ -25,35 +25,26 @@ General solution structure:
 - main function to tie everything together and output the result 
 """
 
-__title__ = "Advent of Code 2025 Day 00 Puzzle"
+__title__ = "Advent of Code 2025 Day 07 Puzzle"
 __author__ = "3seasonal"
-__created__ = "2025-12-00"
+__created__ = "2025-12-07"
 
 
 def main():
     """
     Main function to execute pid parsing.
     """
-    
-    # config
-    #input_path = os.path.join(os.path.dirname(__file__), '00_sample_input.txt')
-    input_path = os.path.join(os.path.dirname(__file__), '00_input.txt')
-    
-    #sample input
-    sample_output_01 = None
-    sample_output_02 = None
-    
-    # initialize parser and processor construtors
-    iparse = InputParser(input_path)
-    doit = DoTheThing()
-
-    # process instructions
-    
-    
-    # report results
-    
-    # validate against sample output if available
         
+    # config
+    #input_path = os.path.join(os.path.dirname(__file__), '07_sample_input.txt')
+    input_path = os.path.join(os.path.dirname(__file__), '07_input.txt')
+    
+    tach = DoTheThing()
+    parser = InputParser(input_path)
+
+    print (f"total beams hit: {tach.simulate_tacheon_beams(parser.get_map())}")
+
+    print (f"total traversals: {tach.start_traverse(parser.get_map())}")
 
 
 

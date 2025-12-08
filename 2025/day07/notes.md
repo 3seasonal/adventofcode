@@ -35,3 +35,49 @@ tacheon (row, col)
 print function:
 pretty prints the output
 
+
+IN ORDER TREE TRAVERSAL:
+from node:
+
+
+traversals = start_traverse( 0 )
+
+def start_traverse( row ):
+    for col in range(len(self.map[row])):
+        # expect only one
+        if self.map[row][col] == "S":
+            return traverse (row+2, col, 0)
+
+
+def traverse(row, col, count):
+    # exit cases
+    if (row > len(self.map)):
+        return 0
+    if (col >= len(self.map[0])):
+        return 0
+
+    # complete traversal
+    if (col == len(self.map)):
+        return count +1 
+
+    tree_char = self.map[row][col]
+
+    # if there is no splitter:
+    if tree_char == "|"
+        return traverse(row+2, col, count)
+
+    # if there is a splitter:
+    if tree_char == "^":
+        return traverse(row+2, col-1, count) # left branch
+        return traverse(row+2, col+1, count) # right branch
+
+ 
+    
+
+
+
+
+# traverse left
+traverse()
+
+# traverse right
