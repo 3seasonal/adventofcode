@@ -55,8 +55,11 @@ class DoTheThing:
         # complete traversal
         if (row == len(self.mapt)):
             # show progress
-            if count % 1000 == 0:
-                print(".", end="")
+            if count % 1000000 == 0:
+                #print(f"({row},{col}), ", end="")
+                print (".", end="")
+                #flush output
+                sys.stdout.flush()
 
             return (count + 1)
 
