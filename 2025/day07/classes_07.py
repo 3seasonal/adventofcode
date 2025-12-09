@@ -21,6 +21,38 @@ class DoTheThing:
             
 
 
+    def start_traverse_sum_branches(self, newmapt: List[List[str]]) -> int:
+
+        """ Starts the new traversal from the starting point 'S'.
+        Args:
+            newmapt (List[List[str]]): 2d grid of characters.  
+        """
+        self.newmap = newmapt
+        for col in range(len(self.newmap[0])):
+            # expect only one
+            if self.newmap[0][col] == "S":
+                traversal_count =  self.sum_branches (2, col, 0)
+                print (r"\n")
+                return traversal_count
+
+
+    def sum_branches(self, row, col, count):
+
+        # if we are beyond the last row, we have a complete traversal
+        if (row == len(self.newmap)):
+            return 1
+
+        x = self.newmap[row][col]
+
+        # if there is no splitter:  
+        if x == "|":
+            return self.sum_branches(row+2, col, count)
+
+        # if there is a splitter:
+        if x == "^":
+            return self.sum_branches(row+2, col-1, count) + self.sum_branches(row+2, col+1, count)
+            count = self.sum_branches(row+2, col+1, count) # right branch
+
 
 
     def start_traverse(self, mapt: List[List[str]]) -> int:

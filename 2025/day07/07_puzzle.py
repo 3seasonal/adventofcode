@@ -44,7 +44,12 @@ def main():
 
     print (f"total beams hit: {tach.simulate_tacheon_beams(parser.get_map())}")
 
-    print (f"total traversals: {tach.start_traverse(parser.get_map())}")
+    #print (f"total traversals: {tach.start_traverse(parser.get_map())}")
+
+    
+    print (f"total traversals: {tach.start_traverse_sum_branches(parser.get_map())}")
+
+    
 
 
 
