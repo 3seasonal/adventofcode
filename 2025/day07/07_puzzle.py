@@ -36,8 +36,8 @@ def main():
     """
         
     # config
-    #input_path = os.path.join(os.path.dirname(__file__), '07_sample_input.txt')
-    input_path = os.path.join(os.path.dirname(__file__), '07_input.txt')
+    input_path = os.path.join(os.path.dirname(__file__), '07_sample_input.txt')
+    #input_path = os.path.join(os.path.dirname(__file__), '07_input.txt')
     
     tach = DoTheThing()
     parser = InputParser(input_path)
@@ -47,7 +47,7 @@ def main():
     #print (f"total traversals: {tach.start_traverse(parser.get_map())}")
 
     
-    print (f"total traversals: {tach.start_traverse_sum_branches(parser.get_map())}")
+    print (f"total traversals: {tach.start_calc_values(parser.get_map())}")
 
     
 

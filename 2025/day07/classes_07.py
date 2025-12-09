@@ -4,6 +4,8 @@ import sys
 from typing import Iterable, List, Optional
 import re
 
+from pyparsing import col
+
 class DoTheThing:
     """
     A class to store the functional code.
@@ -20,6 +22,63 @@ class DoTheThing:
             print("".join(row)) 
             
 
+
+    def start_calc_values(self, map: List[List[str]]) -> None:
+        """ Calculates values on the map.
+        Args:
+            map (List[List[str]]): 2d grid of characters.  
+        """
+        self.vals_map = map
+        for col in range (len(self.vals_map[0])):
+            # expect only one
+            if self.vals_map[0][col] == "S":
+                self.calc_value(0, col, 1)
+
+        #summ last line
+        last_array = self.vals_map[len(self.vals_map)-1]
+        self.print_map(self.vals_map)
+        return sum(int(v) for v in last_array if v.isdigit())
+
+
+       
+    def calc_value(self, row, col, increment_value):
+
+        # exit contition
+        if row > len(self.vals_map)-1:
+            return
+        
+        if self.vals_map[row][col] == "S":
+            # set the number
+            self.vals_map[row+1][col] = str(increment_value)
+            self.calc_value(row+2, col, increment_value)
+            
+        # value is a beam
+        if self.vals_map[row][col] == "|":
+            down_increment_value = increment_value
+            if self.vals_map[row+1][col].isdigit():
+                down_increment_value = down_increment_value + int(self.vals_map[row+1][col])
+            self.vals_map[row+1][col] = str(down_increment_value)
+            self.calc_value(row+2, col, down_increment_value)
+
+        # value is a splitter
+        if self.vals_map[row][col] == "^":
+            #left side
+            left_increment_value = increment_value
+            if self.vals_map[row+1][col-1].isdigit():
+                left_increment_value = left_increment_value + int(self.vals_map[row+1][col-1])
+            self.vals_map[row+1][col-1] = str(left_increment_value)
+            self.calc_value(row+2, col-1, left_increment_value)
+
+            # right branch
+            right_increment_value = increment_value
+            if self.vals_map[row+1][col+1].isdigit():
+                right_increment_value = right_increment_value + int(self.vals_map[row+1][col+1])
+            self.vals_map[row+1][col+1] = str(right_increment_value)
+            self.calc_value(row+2, col+1, right_increment_value)
+
+  
+
+        
 
     def start_traverse_sum_branches(self, newmapt: List[List[str]]) -> int:
 
@@ -111,8 +170,6 @@ class DoTheThing:
 
 
 
-
-
     def simulate_tacheon_beams(self, map: List[List[str]]) -> int:
         """ Simulates the tacheon beams on the map.
         Looks in the first row for the 'S' character, and shoots beams downwards.
@@ -125,6 +182,7 @@ class DoTheThing:
         self.net_beam_count: int = 0
         self.net_split_count: int = 0
         self.map = map
+        self.map_calcs = map.copy()
         # before
         self.print_map(self.map)
         for col in range(len(self.map[0])):
@@ -137,6 +195,7 @@ class DoTheThing:
         self.print_map(self.map)
         print (f"total splits: {self.net_split_count}")
         return self.net_beam_count
+
 
     def _shoot_beam(self, row: int, col: int):
         """ Shoots a beam downwards from the given position.
@@ -165,7 +224,7 @@ class DoTheThing:
             self.map[row][col] = '|'
             self.net_beam_count += 1
             self._shoot_beam(row + 1, col)
-                    
+
         if char == '^':
             # splitter, shoot both ways
             self.net_split_count += 1
