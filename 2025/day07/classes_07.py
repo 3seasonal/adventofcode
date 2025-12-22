@@ -40,8 +40,56 @@ class DoTheThing:
         return sum(int(v) for v in last_array if v.isdigit())
 
 
-       
+
+    def row_scan(self, map: List[List[str]] ) -> int:
+        self.scanned_map = map
+        for i in range(len(self.scanned_map)):
+            if i % 2 == 1:
+                # even row
+
+                print (self.scanned_map[i-2])
+                print (self.scanned_map[i-1])
+                #print (self.scanned_map[i])
+
+
+                # scan the row
+                for col in range (len(self.scanned_map[i])):
+                                          
+                    # check for beam
+                    if self.scanned_map[i][col] == "|":
+                        value = 0
+                        
+                        # base case
+                        if self.scanned_map[i-1][col]=="S":
+                            value = 1
+
+                        # check above
+                        if self.scanned_map[i-1][col]=="|":
+                            value += int(self.scanned_map[i-2][col])
+
+                        # check left
+                        if col-1 >= 0: #valid col
+                            if self.scanned_map[i-1][col-1]=="^":
+                                if self.scanned_map[i-2][col-1].isdigit():
+                                    value += int(self.scanned_map[i-2][col-1])
+                                # else is an unused splitter
+
+                        # check right
+                        if col+1 < len(self.scanned_map[i]): #valid col
+                            if self.scanned_map[i-1][col+1]=="^":
+                            
+                                if self.scanned_map[i-2][col+1].isdigit():
+                                    value += int(self.scanned_map[i-2][col+1])
+                                # else is an unused splitter    
+                            
+                        self.scanned_map[i][col] = str(value)
+
+        return sum(int(v) for v in self.scanned_map[len(self.scanned_map)-1] if v.isdigit())
+
+
+
     def calc_value(self, row, col, increment_value):
+        print((f"calc_value({row}, {col}, {increment_value})"))
 
         # exit contition
         if row > len(self.vals_map)-1:
