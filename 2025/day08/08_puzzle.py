@@ -3,6 +3,7 @@
 import os
 from classes_08 import DoTheThing 
 from classes_08 import InputParser
+from classes_08 import calcs
 """
 
 - Project: adventofcode
@@ -43,17 +44,19 @@ def main():
     # initialize parser and processor construtors
     iparse = InputParser(input_path)
     doit = DoTheThing()
+    input_matrix = iparse.get_matrix()
+    calc = calcs(input_matrix)
 
-    doit.visualise_coords(iparse.get_matrix())
+    doit.visualise_coords(input_matrix)
 
-    # process instructions
-    
-    
-    # report results
-    
-    # validate against sample output if available
-        
 
+    eclid_m = calc.build_euclidean_dict()
+    print (eclid_m)
+    calc.build_cuircuit_list(eclid_m, max_connections=10)
+
+   
+   
+    calc.print_cuircuit_list()
 
 
 if __name__ == "__main__":

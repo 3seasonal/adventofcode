@@ -30,7 +30,7 @@ class DoTheThing:
         Returns:
             None
         """ 
-
+        #print (input_matrix)
         print (f"Visualising {len(input_matrix)} coordinates...")
         if not input_matrix:
             return
@@ -111,7 +111,7 @@ class calcs:
 
 
 
-    def build_euclidean_dict(self) -> None:
+    def build_euclidean_dict(self) -> dict:
         """ Builds the Euclidean distance dictionary for all points in the matrix.
         calls the calculate_euclidean_distance method for each unique point pair.
         saves the results in the eucalidean_dict usign the point indices as keys.
@@ -139,8 +139,8 @@ class calcs:
 
         print (f"Calculated {calcuated} distances out of {count} point pairs.")
         # sort the distance dictionary by distance descending
-        self.eucalidean_dict = dict(sorted(self.eucalidean_dict.items(), key=lambda item: item[1], reverse=True))
-    
+        self.eucalidean_dict = dict(sorted(self.eucalidean_dict.items(), key=lambda item: item[1], reverse=False))
+        return self.eucalidean_dict
 
 
     def build_cuircuit_list(self, sorted_distance_matrix, max_connections:int):
@@ -154,34 +154,47 @@ class calcs:
         connections = 0
         while (connections < max_connections):
 
-            # pop the first item from the sorted distance matrix
-            for (point1, point2), distance in sorted_distance_matrix.items():
+            # pop the first item in the dictionary (with smallest distance)
+            last_key = list(sorted_distance_matrix)[-1]
+            print (f"distance: {sorted_distance_matrix.pop(last_key)}")
+            point1, point2 = last_key
 
-                # pop the first item in the dictionary (with smallest distance)
-                (point1, point2), distance = sorted_distance_matrix.popitem(last=False)
-                
-                # Both points already connected?
-                if any(point1 in circuit and point2 in circuit for circuit in self.circuit_list):
-                    print ("Both points already connected?")
+            # Both points already connected?
+            if any(point1 in circuit and point2 in circuit for circuit in self.circuit_list):
+                print ("Both points already connected?")
 
-                # One point already connected?
-                elif any(point1 in circuit or point2 in circuit for circuit in self.circuit_list):
-                    print ("One point already connected?")
-                    # add the other point to the circuit list containing the other point
-                    for circuit in self.circuit_list:
-                        if point1 in circuit:
-                            circuit.append(point2)
-                        elif point2 in circuit:
-                            circuit.append(point1)
-                        else:
-                            print ("Error: point not found in any circuit?")
-                    connections += 1
+            # One point already connected?
+            elif any(point1 in circuit or point2 in circuit for circuit in self.circuit_list):
+                print ("One point already connected?")
+                # add the other point to the circuit list containing the other point
+                for circuit in self.circuit_list:
+                    if point1 in circuit:
+                        for circuit2 in self.circuit_list:
+                            if point2 in circuit2:
+                                # both points already in different circuits, merge them
+                                print ("Both points already in different circuits")
+                            else:
+
+'''
+
+Need to review this logic
+write the algorith first
+
+'''
+
+                        circuit.append(point2)
+                    elif point2 in circuit:
+                        circuit.append(point1)
+                    else:
+                        #print ("Error: point not found in any circuit?")
+                        pass
+                connections += 1
                     
-                else:
-                # Neither point connected?
-                    # add both points to a new circuit list
-                    self.circuit_list.append([point1, point2])
-                    connections += 1
+            else:
+            # Neither point connected?
+                # add both points to a new circuit list
+                self.circuit_list.append([point1, point2])
+                connections += 1
 
             # add all remainning points as individual circuits
             for point in self.matrix_dict.keys():
@@ -189,6 +202,25 @@ class calcs:
                     self.circuit_list.append([point])
 
 
+    def print_cuircuit_list(self):
+        """ prints the circuit list to stdout.
+        Args:
+            None
+        Returns:
+            None
+        """
+        print ("Circuit List:")
+        lengths = []
+        for i, circuit in enumerate(self.circuit_list):
+            print (f"Circuit {i}: length: {len(circuit)}. Points: {circuit}")
+            lengths.append(len(circuit))
+
+        # multiply the top three lengths together
+        lengths.sort(reverse=True)
+        if len(lengths) >= 3:
+            result = lengths[0] * lengths[1] * lengths[2]
+            print (f"Top three lengths multiplied together: {lengths[0]} * {lengths[1]} * {lengths[2]} = {result}")
+        
 
 
 class InputParser:
