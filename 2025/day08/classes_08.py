@@ -152,55 +152,98 @@ class calcs:
             List[tuple[int, int]]: A list of tuples representing the circuits.
         """
         connections = 0
-        while (connections < max_connections):
-
+        
+        # track which points are already connected
+        un_connected_points = list(set(self.matrix_dict.keys()))
+        
+        while ((connections < max_connections) and len(un_connected_points)>0):
+            print (un_connected_points)
             # pop the first item in the dictionary (with smallest distance)
-            last_key = list(sorted_distance_matrix)[-1]
-            print (f"distance: {sorted_distance_matrix.pop(last_key)}")
-            point1, point2 = last_key
-
-            # Both points already connected?
-            if any(point1 in circuit and point2 in circuit for circuit in self.circuit_list):
-                print ("Both points already connected?")
-
-            # One point already connected?
-            elif any(point1 in circuit or point2 in circuit for circuit in self.circuit_list):
-                print ("One point already connected?")
-                # add the other point to the circuit list containing the other point
-                for circuit in self.circuit_list:
-                    if point1 in circuit:
-                        for circuit2 in self.circuit_list:
-                            if point2 in circuit2:
-                                # both points already in different circuits, merge them
-                                print ("Both points already in different circuits")
-                            else:
-
-'''
-
-Need to review this logic
-write the algorith first
-
-'''
-
-                        circuit.append(point2)
-                    elif point2 in circuit:
-                        circuit.append(point1)
-                    else:
-                        #print ("Error: point not found in any circuit?")
-                        pass
-                connections += 1
+            
+            smallest_key = list(sorted_distance_matrix)[-1] # the last element
+            smallest_distance = sorted_distance_matrix[smallest_key]
+            #print (f"distance: {smallest_distance} between points {smallest_key}")
+            point1, point2 = smallest_key
+            
+            # pop
+            sorted_distance_matrix.pop(smallest_key)
+            
+            # is 1 connected?
+            if point1 in un_connected_points:
+            
+                # check if both points are unconnected
+                if point2 in un_connected_points:
+                    # create a new circuit with both points 
+                    self.circuit_list.append([point1, point2])
+                    connections += 1
+                    un_connected_points.remove(point1)
+                    un_connected_points.remove(point2)
                     
+                # point2 is connected. 
+                else:
+                    # add point1 to point2's circuit
+                    for i, circuit in enumerate(self.circuit_list):
+                        if point2 in circuit:
+                            self.circuit_list[i].append(point1)
+                            connections += 1
+                            un_connected_points.remove(point1)
+            
+            # point1 is connected   
             else:
-            # Neither point connected?
-                # add both points to a new circuit list
-                self.circuit_list.append([point1, point2])
-                connections += 1
+                # is point2 connected?
+                if point2 in un_connected_points:
+                    # add point2 to point1's circuit
+                    for i, circuit in enumerate(self.circuit_list):
+                        if point1 in circuit:
+                            self.circuit_list[i].append(point2)
+                            connections += 1
+                            un_connected_points.remove(point2)
+                            
+                # both points connected
+                else:
+                    print("both points are already connected.")
+                    # # check if they are in the same circuit
+                    # same_circuit = False
+                    
+                    # for circuit in self.circuit_list:
+                    #     if point1 in circuit and point2 in circuit:
+                    #         same_circuit = True
+                    #         break
+                        
+                    # print( "in same circuit?" , same_circuit )
+                    # if not same_circuit:
+                    #     # merge the two circuits
+                    #     circuit1 = None
+                    #     c1i=None
+                    #     circuit2 = None
+                    #     c2i=None
+                    #     for i, circuit in enumerate(self.circuit_list):
+                    #         if point1 in circuit:
+                    #             circuit1 = circuit
+                    #             c1i = i
+                    #         if point2 in circuit:
+                    #             circuit2 = circuit
+                    #             c2i = i
+                    #     if circuit1 and circuit2:
+                    #         self.circuit_list[c1i].extend(circuit2)
+                    #         del self.circuit_list[c2i]
+                    #         connections += 1
+            
+            print (self.circuit_list)
+            
+        # end while less than max connections
+              
+        # add all remainning points as individual circuits
+        for point in self.matrix_dict.keys():
+            if not any(point in circuit for circuit in self.circuit_list):
+                self.circuit_list.append([point])
 
-            # add all remainning points as individual circuits
-            for point in self.matrix_dict.keys():
-                if not any(point in circuit for circuit in self.circuit_list):
-                    self.circuit_list.append([point])
 
+    def print_matrix_dict(self):
+        print ("Matrix Dict:")
+        for key, value in self.matrix_dict.items():
+            print (f"{key}: {value}")
+        
 
     def print_cuircuit_list(self):
         """ prints the circuit list to stdout.
@@ -240,6 +283,7 @@ class InputParser:
         self.path = path
         self.index = 0
         self.input_matrix: List[list[int]] = []
+        
         try:
             with open(path, "r", encoding="utf-8") as fh:
                 raw = fh.read()

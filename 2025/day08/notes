@@ -1,0 +1,36 @@
+have a dictionary of point, connections, 
+
+points (matrix)
+connections (eucalidean_dict)
+circuits (circuit_list)
+
+create check_list of index from matrix.
+
+iterate through connections.
+
+if both nodes are in the check_list - create
+else if A is not in check_list:
+    if B is in check_list:
+        - both are connected - ignore
+
+    else:
+    
+a - No connected
+    b- not connected
+    MAKE New
+
+a - not connected
+    B- connected
+        connect A to B's cuircuit
+
+a - connected
+    b - not connected
+        ADD B to a's circuit_list
+    
+    b - connected
+
+        a-b in same cuitcite
+            DO NOTHING
+
+        a-b NOT in same cuirvuit
+            JOIN

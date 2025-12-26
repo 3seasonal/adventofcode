@@ -47,11 +47,15 @@ def main():
     input_matrix = iparse.get_matrix()
     calc = calcs(input_matrix)
 
+    calc.print_matrix_dict()
     doit.visualise_coords(input_matrix)
 
 
     eclid_m = calc.build_euclidean_dict()
     print (eclid_m)
+    
+    
+    
     calc.build_cuircuit_list(eclid_m, max_connections=10)
 
    
